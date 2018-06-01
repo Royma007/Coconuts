@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CoconutsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="PRENDAS">
+          <Key>
+            <PropertyRef Name="IDPRENDAS" />
+          </Key>
+          <Property Name="IDPRENDAS" Type="int" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PRECIO" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="IDPUBLICACIONES" Type="int" />
+          <Property Name="MODELO" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PUBLICACIONES">
+          <Key>
+            <PropertyRef Name="IDPUBLICACIONES" />
+          </Key>
+          <Property Name="IDPUBLICACIONES" Type="int" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IDUSUARIO" Type="int" />
+          <Property Name="IMAGEN" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="USUARIO">
+          <Key>
+            <PropertyRef Name="IDUSUARIO" />
+          </Key>
+          <Property Name="IDUSUARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="APELLIDOS" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SEXO" Type="char" MaxLength="1" />
+          <Property Name="FECHA_ALTA" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_IDPUBLICACIONES">
+          <End Role="PUBLICACIONES" Type="Self.PUBLICACIONES" Multiplicity="0..1" />
+          <End Role="PRENDAS" Type="Self.PRENDAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PUBLICACIONES">
+              <PropertyRef Name="IDPUBLICACIONES" />
+            </Principal>
+            <Dependent Role="PRENDAS">
+              <PropertyRef Name="IDPUBLICACIONES" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IDUSUARIO_PUBLIC">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="PUBLICACIONES" Type="Self.PUBLICACIONES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="IDUSUARIO" />
+            </Principal>
+            <Dependent Role="PUBLICACIONES">
+              <PropertyRef Name="IDUSUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_EliminarPublicacion" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idpublicaciones" Type="int" Mode="In" />
+          <Parameter Name="descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="idusuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_ModPrenda" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idprendas" Type="int" Mode="In" />
+          <Parameter Name="descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="precio" Type="decimal" Mode="In" />
+          <Parameter Name="idpublicaciones" Type="int" Mode="In" />
+          <Parameter Name="modelo" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_NuevoUsuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="nombre" Type="varchar" Mode="In" />
+          <Parameter Name="apellido" Type="varchar" Mode="In" />
+          <Parameter Name="Sexo" Type="char" Mode="In" />
+          <Parameter Name="Fecha_alta" Type="datetime" Mode="In" />
+          <Parameter Name="idusuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_PrendaMasBarata" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="descripcion" Type="varchar" Mode="In" />
+          <Parameter Name="modelo" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="CoconutsModelStoreContainer">
+          <EntitySet Name="PRENDAS" EntityType="Self.PRENDAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PUBLICACIONES" EntityType="Self.PUBLICACIONES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_IDPUBLICACIONES" Association="Self.FK_IDPUBLICACIONES">
+            <End Role="PUBLICACIONES" EntitySet="PUBLICACIONES" />
+            <End Role="PRENDAS" EntitySet="PRENDAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IDUSUARIO_PUBLIC" Association="Self.FK_IDUSUARIO_PUBLIC">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="PUBLICACIONES" EntitySet="PUBLICACIONES" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CoconutsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="PRENDAS">
+          <Key>
+            <PropertyRef Name="IDPRENDAS" />
+          </Key>
+          <Property Name="IDPRENDAS" Type="Int32" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PRECIO" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="IDPUBLICACIONES" Type="Int32" />
+          <Property Name="MODELO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="PUBLICACIONES" Relationship="Self.FK_IDPUBLICACIONES" FromRole="PRENDAS" ToRole="PUBLICACIONES" />
+        </EntityType>
+        <EntityType Name="PUBLICACIONES">
+          <Key>
+            <PropertyRef Name="IDPUBLICACIONES" />
+          </Key>
+          <Property Name="IDPUBLICACIONES" Type="Int32" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IDUSUARIO" Type="Int32" />
+          <Property Name="IMAGEN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PRENDAS" Relationship="Self.FK_IDPUBLICACIONES" FromRole="PUBLICACIONES" ToRole="PRENDAS" />
+          <NavigationProperty Name="USUARIO" Relationship="Self.FK_IDUSUARIO_PUBLIC" FromRole="PUBLICACIONES" ToRole="USUARIO" />
+        </EntityType>
+        <EntityType Name="USUARIO">
+          <Key>
+            <PropertyRef Name="IDUSUARIO" />
+          </Key>
+          <Property Name="IDUSUARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="APELLIDOS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SEXO" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="FECHA_ALTA" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="PUBLICACIONES" Relationship="Self.FK_IDUSUARIO_PUBLIC" FromRole="USUARIO" ToRole="PUBLICACIONES" />
+        </EntityType>
+        <Association Name="FK_IDPUBLICACIONES">
+          <End Role="PUBLICACIONES" Type="Self.PUBLICACIONES" Multiplicity="0..1" />
+          <End Role="PRENDAS" Type="Self.PRENDAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PUBLICACIONES">
+              <PropertyRef Name="IDPUBLICACIONES" />
+            </Principal>
+            <Dependent Role="PRENDAS">
+              <PropertyRef Name="IDPUBLICACIONES" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IDUSUARIO_PUBLIC">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="PUBLICACIONES" Type="Self.PUBLICACIONES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="IDUSUARIO" />
+            </Principal>
+            <Dependent Role="PUBLICACIONES">
+              <PropertyRef Name="IDUSUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CoconutsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PRENDAS" EntityType="Self.PRENDAS" />
+          <EntitySet Name="PUBLICACIONES" EntityType="Self.PUBLICACIONES" />
+          <EntitySet Name="USUARIO" EntityType="Self.USUARIO" />
+          <AssociationSet Name="FK_IDPUBLICACIONES" Association="Self.FK_IDPUBLICACIONES">
+            <End Role="PUBLICACIONES" EntitySet="PUBLICACIONES" />
+            <End Role="PRENDAS" EntitySet="PRENDAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IDUSUARIO_PUBLIC" Association="Self.FK_IDUSUARIO_PUBLIC">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="PUBLICACIONES" EntitySet="PUBLICACIONES" />
+          </AssociationSet>
+          <FunctionImport Name="sp_EliminarPublicacion">
+            <Parameter Name="idpublicaciones" Mode="In" Type="Int32" />
+            <Parameter Name="descripcion" Mode="In" Type="String" />
+            <Parameter Name="idusuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ModPrenda">
+            <Parameter Name="idprendas" Mode="In" Type="Int32" />
+            <Parameter Name="descripcion" Mode="In" Type="String" />
+            <Parameter Name="precio" Mode="In" Type="Decimal" />
+            <Parameter Name="idpublicaciones" Mode="In" Type="Int32" />
+            <Parameter Name="modelo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_NuevoUsuario">
+            <Parameter Name="nombre" Mode="In" Type="String" />
+            <Parameter Name="apellido" Mode="In" Type="String" />
+            <Parameter Name="Sexo" Mode="In" Type="String" />
+            <Parameter Name="Fecha_alta" Mode="In" Type="DateTime" />
+            <Parameter Name="idusuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_PrendaMasBarata">
+            <Parameter Name="descripcion" Mode="In" Type="String" />
+            <Parameter Name="modelo" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CoconutsModelStoreContainer" CdmEntityContainer="CoconutsEntities">
+          <EntitySetMapping Name="PRENDAS">
+            <EntityTypeMapping TypeName="CoconutsModel.PRENDAS">
+              <MappingFragment StoreEntitySet="PRENDAS">
+                <ScalarProperty Name="IDPRENDAS" ColumnName="IDPRENDAS" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="IDPUBLICACIONES" ColumnName="IDPUBLICACIONES" />
+                <ScalarProperty Name="MODELO" ColumnName="MODELO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PUBLICACIONES">
+            <EntityTypeMapping TypeName="CoconutsModel.PUBLICACIONES">
+              <MappingFragment StoreEntitySet="PUBLICACIONES">
+                <ScalarProperty Name="IDPUBLICACIONES" ColumnName="IDPUBLICACIONES" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="IDUSUARIO" ColumnName="IDUSUARIO" />
+                <ScalarProperty Name="IMAGEN" ColumnName="IMAGEN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USUARIO">
+            <EntityTypeMapping TypeName="CoconutsModel.USUARIO">
+              <MappingFragment StoreEntitySet="USUARIO">
+                <ScalarProperty Name="IDUSUARIO" ColumnName="IDUSUARIO" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="APELLIDOS" ColumnName="APELLIDOS" />
+                <ScalarProperty Name="SEXO" ColumnName="SEXO" />
+                <ScalarProperty Name="FECHA_ALTA" ColumnName="FECHA_ALTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_EliminarPublicacion" FunctionName="CoconutsModel.Store.sp_EliminarPublicacion" />
+          <FunctionImportMapping FunctionImportName="sp_ModPrenda" FunctionName="CoconutsModel.Store.sp_ModPrenda" />
+          <FunctionImportMapping FunctionImportName="sp_NuevoUsuario" FunctionName="CoconutsModel.Store.sp_NuevoUsuario" />
+          <FunctionImportMapping FunctionImportName="sp_PrendaMasBarata" FunctionName="CoconutsModel.Store.sp_PrendaMasBarata" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
